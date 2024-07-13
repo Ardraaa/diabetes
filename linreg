@@ -1,1 +1,48 @@
-
+import pandas as pd 
+import numpy as np
+import sklearn.datasets
+from sklearn.datasets import load_diabetes
+diabetes=load_diabetes()
+my_df=pd.DataFrame(diabetes.data,columns=diabetes.feature_names)
+my_df['target']=diabetes.target
+my_df
+my_df.head()
+#split the data into x and y
+X=my_df.drop('target',axis=1)
+y=my_df['target']
+X.shape,y.shape
+from sklearn.model_selection import train_test_split
+#split the data into training and testing
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=42)
+#shape pf training and testing sets
+print("Training set shape: ",X_train.shape,y_train.shape)
+print("Testing set shape: ",X_test.shape,y_test.shape)
+from sklearn.linear_model import LinearRegression
+#creating a linear regression model
+lr=LinearRegression()
+#predict on the testing set
+y_preds=lr.predict(X_test)
+y_preds.shape
+from sklearn.metrics import r2_score,mean_squared_error,mean_absolute_error
+r2=r2_score(y_test,y_preds)
+mse=mean_squared_error(y_test,y_preds)
+mae=mean_absolute_error(y_test,y_preds)
+intercept=lr.intercept_
+print("R2 value is: ",r2)
+print("Mean squared error: ",mse)
+print("Mean absolute error: ",mae)
+print("Intercept value: ",intercept)
+import matplotlib.pyplot as plt
+#plot actual values vs predicted values
+plt.scatter(y_test,y_preds,alpha=1)
+plt.plot([y.min(),y.max()],[y.min(),y.max()],color="red")
+plt.xlabel("Actual values")
+plt.ylabel("Predicted values")
+plt.title("Actual vs Predicted values[linear regression]")
+plt.show()
+#to plot the residuals
+plt.scatter(y_preds,y_test-y_preds,alpha=1)
+plt.xlabel("Predicted values")
+plt.ylabel("Residual values")
+plt.title("Residual plot[linear regression]")
+plt.show()
